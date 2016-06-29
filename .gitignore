@@ -1,0 +1,6 @@
+/channels/
+/compiled/
+/_etc_nixos/
+/_build/
+
+*~
