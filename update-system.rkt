@@ -1,10 +1,11 @@
 #lang racket
 
-(require "shell.rkt"
+(require shell
+         sudo
+         racket/date
          "parameters.rkt"
          "installed-versions.rkt"
-         sudo
-         racket/date)
+         )
 
 
 (command-line
@@ -15,6 +16,9 @@
  [("--execute") "Switch to new configuration" (execute? #t)]
  )
  
+;; Define two commands for convenience
+(define-executable-path nix-env-rebuild)
+(define-executable-path nixos-rebuild)
  
  
  ;; check if repos are all clean
