@@ -1,6 +1,6 @@
 #lang racket
 
-(require "shell.rkt"
+(require "collects/shell/main.rkt"
          "parameters.rkt"
          )
 
@@ -8,7 +8,7 @@
 
 ;; create nixos-installed-nixpkgs-version and nix-env-installed-nixpkgs-version
 (define (get-version dir)
-  (system*/string git "-C" dir "log" "-n" "1"))
+  (cmd/string "git" "-C" dir "log" "-n" "1"))
 
 (define (installed-version-text cfg pkgs)
   (format #<<END

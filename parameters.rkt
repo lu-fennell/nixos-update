@@ -1,6 +1,6 @@
 #lang racket
 
-(require "shell.rkt")
+(require "collects/shell/main.rkt")
 
 (provide (all-defined-out))
 
