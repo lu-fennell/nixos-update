@@ -128,9 +128,12 @@
     (printf "Copying user config to ~a~n" (path->string (nix-env-config)))
     (write-version-script (:/ (nix-env-config) "nix-env-installed-version" "nix-env-installed-version")
                           "nix-env" (nix-env-config))
-    (define command (if (execute?) "switch" "dry-run"))
-    (printf "Running nix-env-rebuild ~a~n" command)
-    (define rebuild-ok? (system* nix-env-rebuild command))
+    (define commands (list
+                      ;; TODO: workaround for a bug in nix-env-rebuild that uses .nix-profile as default, instead of it's target (which is $NIX_USER_PROFILE_DIR/profile
+                      "-p" (~a (getenv "NIX_USER_PROFILE_DIR") "/profile")
+                      (if (execute?) "switch" "dry-run")))
+    (info (apply ~a #:separator " " "Running nix-env-rebuild" commands))
+    (define rebuild-ok? (apply system* nix-env-rebuild commands))
     (when (and rebuild-ok? (execute?))
       (tag-repos "env-build-success-" (nixpkgs) (nix-env-config))))
   )
