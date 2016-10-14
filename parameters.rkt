@@ -21,4 +21,3 @@
 
 (define build-system? (make-parameter #f))
 (define build-env? (make-parameter #f))
-(define execute? (make-parameter #f))

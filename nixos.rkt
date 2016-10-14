@@ -97,6 +97,11 @@
            (build-system?)
            (build-env?))
     (info "... nothing to do"))
+  
+  (define (execute?)
+    (and
+     (not (null? (rest-args)))
+     (not (member "dry-run" (rest-args)))))
 
   (when (build-system?)
     (displayln "Building system...")
@@ -111,9 +116,11 @@
     (info "Copying system config to ~a" (nixos-dest-dir))
     (system*/sudo rsync "-rv" (~a (path->string (nixos-out-dir)) "/") (path->string (nixos-dest-dir)))
     (define commands
-      (list "-I" (nixpkgs)
-            "-I" (~a "nixpkgs=" (nixpkgs))
-            (if (execute?) "switch" "dry-run")))
+      (list* "-I" (nixpkgs)
+             "-I" (~a "nixpkgs=" (nixpkgs))
+            ;; (if (execute?) "switch" "dry-run")
+             (rest-args)
+             ))
     (info (apply ~a #:separator " " "Running nixos-rebuild" commands))
     (define rebuild-ok? (apply system*/sudo nixos-rebuild commands))
     (when (and rebuild-ok? (execute?))
@@ -128,10 +135,10 @@
     (printf "Copying user config to ~a~n" (path->string (nix-env-config)))
     (write-version-script (:/ (nix-env-config) "nix-env-installed-version" "nix-env-installed-version")
                           "nix-env" (nix-env-config))
-    (define commands (list
+    (define commands (list*
                       ;; TODO: workaround for a bug in nix-env-rebuild that uses .nix-profile as default, instead of it's target (which is $NIX_USER_PROFILE_DIR/profile
                       "-p" (~a (getenv "NIX_USER_PROFILE_DIR") "/profile")
-                      (if (execute?) "switch" "dry-run")))
+                      (rest-args)))
     (info (apply ~a #:separator " " "Running nix-env-rebuild" commands))
     (define rebuild-ok? (apply system* nix-env-rebuild commands))
     (when (and rebuild-ok? (execute?))
@@ -146,13 +153,17 @@
   (command-line
    #:once-any
    [("--env") "Run nix-env with current nixpkgs" (mode 'nix-env)]
-   [("--update") "Update the system (default)" (mode 'update)]
+   [("--build-system") "Build the system (when updating)"
+    (build-system? #t)
+    (mode 'update)
+    ]
+   [("--build-env") "Build user environment"
+    (build-env? #t)
+    (mode 'update)
+    ]
    #:once-each
-   [("--build-system") "Build the system (when updating)" (build-system? #t)]
-   [("--build-env") "Build user environment" (build-env? #t)]
+   [("--nixpkgs") dir "Path to nixpkgs" (nixpkgs (string->path dir))]
    [("--verbose") "More output" (verbose? #t)]
-   #:once-any
-   [("--execute") "Switch to new configuration" (execute? #t)]
    #:args args (rest-args args)
    )
   
