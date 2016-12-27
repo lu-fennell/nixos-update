@@ -20,6 +20,7 @@ fashion.
 - Remove the nix-channels from `~/.nix-defexpr` (`sudo -i nix-channel --remove ...`)
 - Directory layout (see also `parameters.rkt`):
     - `~/nixos-update` should be a clone of this repository
+    - `~/nixos-update/channels` should contain checkouts of nixpkgs-channel branches (https://github.com/NixOS/nixpkgs-channels)
     - `~/.nixpkgs`. Has to be compatible with `nix-env-rebuild`. It should also
       contain a nixexprs `nix-env-installed-version.nix`:
 
