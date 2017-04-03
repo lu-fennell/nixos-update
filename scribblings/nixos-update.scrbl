@@ -1,10 +1,10 @@
 #lang scribble/manual
-@require[@for-label[shell-alpha
+@require[@for-label[nixos-update
                     racket/base]]
 
-@title{shell-alpha}
+@title{nixos-update}
 @author{fennell}
 
-@defmodule[shell-alpha]
+@defmodule[nixos-update]
 
 Package Description Here

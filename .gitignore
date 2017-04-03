@@ -3,3 +3,9 @@
 /_etc_nixos/
 
 *~
+*~
+\#*
+.\#*
+.DS_Store
+compiled/
+/doc/

@@ -1,8 +1,8 @@
-shell-alpha
-Copyright (c) 2016 fennell
+nixos-update
+Copyright (c) 2017 fennell
 
 This package is distributed under the GNU Lesser General Public
-License (LGPL).  This means that you can link shell-alpha into proprietary
+License (LGPL).  This means that you can link nixos-update into proprietary
 applications, provided you follow the rules stated in the LGPL.  You
 can also modify this package; if you distribute a modified version,
 you must distribute it under the terms of the LGPL, which in

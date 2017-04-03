@@ -45,6 +45,7 @@ with import <nixpkgs> {};
   nix-env-installed-version
   ....
 ````
+    Additionally, the directory ".nixpkgs/nix-env-installed-version/" should be ignored by git. Otherwise nixos-update will complain
     - `~/nixos-config`. Contains `.nix`-files with systems settings. They should
       be included in `configuration.nix`. It should include a `nixos-installed-version.nix` expression:
 
