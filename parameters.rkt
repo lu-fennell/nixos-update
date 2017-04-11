@@ -10,7 +10,7 @@
 ;;;;;;;;;;;;;;;;;;;;
 ; TODO: set this from NIX_PATH
 (define nixpkgs (make-parameter
-                 (~  "nixos-update/channels/nixos-16.09")))
+                 (~  "nixos-update/channels/default")))
 (define nixos-config (make-parameter
                        (~ "nixos-config")))
 (define nix-env-config (make-parameter
