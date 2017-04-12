@@ -79,24 +79,26 @@
   (info "Starting update")
 
   ;; check that everything exists
-  
-  (when (build-system?)
-    (assert (directory-exists? (nixos-config))
-	    "System configuration directory does not exist: ~a" (nixos-config)) )
-  (when (build-env?)
-    (assert (directory-exists? (nix-env-config))
-	    "Environment configuration directory does not exists: ~a"
-	    (nix-env-config)))
 
-  ;; check if repos are all clean
-  (for ([d (list (nixpkgs)
-                 (nixos-config)
-                 (nix-env-config))])
+  (define (check-for-clean-repos . repos)
+  (for ([d repos])
     (let ([status-output (git-status d)])
       (unless (git-status-output-clean? status-output)
         (raise-user-error 'clean-check "aborting, as git repo ~a is dirty:~n~a" d status-output))
       ))
-
+  )
+  
+  (when (build-system?)
+    (assert (directory-exists? (nixos-config))
+	    "System configuration directory does not exist: ~a" (nixos-config))
+    (check-for-clean-repos (nixos-config) (nix-env-config))
+    )
+  (when (build-env?)
+    (assert (directory-exists? (nix-env-config))
+	    "Environment configuration directory does not exists: ~a"
+	    (nix-env-config))
+    (check-for-clean-repos (nixpkgs) (nix-env-config))
+    )
 
   (system* mkdir "-p" (nixos-out-dir))
   (define (write-version-script script-file title cfg)
