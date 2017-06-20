@@ -87,17 +87,20 @@
         (raise-user-error 'clean-check "aborting, as git repo ~a is dirty:~n~a" d status-output))
       ))
   )
-  
+
+  ;; check that nixpkgs is clean in all cases
+  (check-for-clean-repos (nixpkgs))
+
   (when (build-system?)
     (assert (directory-exists? (nixos-config))
 	    "System configuration directory does not exist: ~a" (nixos-config))
-    (check-for-clean-repos (nixos-config) (nix-env-config))
+    (check-for-clean-repos (nixos-config))
     )
   (when (build-env?)
     (assert (directory-exists? (nix-env-config))
 	    "Environment configuration directory does not exists: ~a"
 	    (nix-env-config))
-    (check-for-clean-repos (nixpkgs) (nix-env-config))
+    (check-for-clean-repos (nix-env-config))
     )
 
   (system* mkdir "-p" (nixos-out-dir))
